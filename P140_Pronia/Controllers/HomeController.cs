@@ -25,7 +25,7 @@ namespace P140_Pronia.Controllers
             };
 
             if (model.Sliders is null || model.Plants is null) return NotFound();
-
+            
             return View(model);
         }
     }
