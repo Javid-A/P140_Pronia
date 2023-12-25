@@ -18,6 +18,7 @@ namespace P140_Pronia.Controllers
         //ContenResult,JsonResult,ViewResult,ActionResult
         public IActionResult Index()
         {
+           
             HomeVM model = new HomeVM
             {
                 Sliders = _context.Sliders.ToList(),
