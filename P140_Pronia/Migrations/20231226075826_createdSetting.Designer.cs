@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using P140_Pronia.DAL;
 
@@ -11,9 +12,10 @@ using P140_Pronia.DAL;
 namespace P140_Pronia.Migrations
 {
     [DbContext(typeof(ProniaDbContext))]
-    partial class ProniaDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231226075826_createdSetting")]
+    partial class createdSetting
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -36,7 +38,7 @@ namespace P140_Pronia.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Categories", (string)null);
+                    b.ToTable("Categories");
                 });
 
             modelBuilder.Entity("P140_Pronia.Entities.Information", b =>
@@ -60,7 +62,7 @@ namespace P140_Pronia.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Informations", (string)null);
+                    b.ToTable("Informations");
                 });
 
             modelBuilder.Entity("P140_Pronia.Entities.Plant", b =>
@@ -88,7 +90,7 @@ namespace P140_Pronia.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Plants", (string)null);
+                    b.ToTable("Plants");
                 });
 
             modelBuilder.Entity("P140_Pronia.Entities.PlantCategory", b =>
@@ -111,7 +113,7 @@ namespace P140_Pronia.Migrations
 
                     b.HasIndex("PlantId");
 
-                    b.ToTable("PlantCategories", (string)null);
+                    b.ToTable("PlantCategories");
                 });
 
             modelBuilder.Entity("P140_Pronia.Entities.PlantImage", b =>
@@ -136,7 +138,7 @@ namespace P140_Pronia.Migrations
 
                     b.HasIndex("PlantId");
 
-                    b.ToTable("PlantImages", (string)null);
+                    b.ToTable("PlantImages");
                 });
 
             modelBuilder.Entity("P140_Pronia.Entities.PlantInformation", b =>
@@ -159,7 +161,7 @@ namespace P140_Pronia.Migrations
 
                     b.HasIndex("PlantId");
 
-                    b.ToTable("PlantInformations", (string)null);
+                    b.ToTable("PlantInformations");
                 });
 
             modelBuilder.Entity("P140_Pronia.Entities.Setting", b =>
@@ -180,7 +182,7 @@ namespace P140_Pronia.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Settings", (string)null);
+                    b.ToTable("Settings");
                 });
 
             modelBuilder.Entity("P140_Pronia.Entities.Slider", b =>
@@ -216,7 +218,7 @@ namespace P140_Pronia.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Sliders", (string)null);
+                    b.ToTable("Sliders");
                 });
 
             modelBuilder.Entity("P140_Pronia.Entities.PlantCategory", b =>

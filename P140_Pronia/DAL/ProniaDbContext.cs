@@ -11,11 +11,32 @@ namespace P140_Pronia.DAL
         }
 
         public DbSet<Plant> Plants { get; set; }
+        public DbSet<Test> Tests { get; set; }
         public DbSet<Slider> Sliders { get; set; }
+        public DbSet<Setting> Settings { get; set; }
         public DbSet<Category> Categories { get; set; }
         public DbSet<PlantImage> PlantImages { get; set; }
         public DbSet<Information> Informations { get; set; }
         public DbSet<PlantCategory> PlantCategories { get; set; }
         public DbSet<PlantInformation> PlantInformations { get; set; }
+
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            foreach (var item in modelBuilder.Model.
+                                    GetEntityTypes()
+                                    .SelectMany(e => e.GetProperties()
+                                                     .Where(p => p.ClrType == typeof(decimal) || p.ClrType == typeof(decimal?)
+                                                            )
+                                                     )
+                                    )
+            {
+                item.SetColumnType("decimal(6,2)");
+            }
+
+            //modelBuilder.Entity<Setting>()
+            //        .HasIndex(e => e.Key).IsUnique();
+            base.OnModelCreating(modelBuilder);
+        }
     }
 }
