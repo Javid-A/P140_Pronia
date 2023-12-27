@@ -11,7 +11,6 @@ namespace P140_Pronia.DAL
         }
 
         public DbSet<Plant> Plants { get; set; }
-        public DbSet<Test> Tests { get; set; }
         public DbSet<Slider> Sliders { get; set; }
         public DbSet<Setting> Settings { get; set; }
         public DbSet<Category> Categories { get; set; }
@@ -21,6 +20,7 @@ namespace P140_Pronia.DAL
         public DbSet<PlantInformation> PlantInformations { get; set; }
 
 
+        
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             foreach (var item in modelBuilder.Model.

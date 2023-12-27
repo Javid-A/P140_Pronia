@@ -10,6 +10,7 @@ namespace P140_Pronia.Services
         public LayoutService(IHttpContextAccessor http)
         {
             _http = http;
+            
         }
         public BasketItem GetBasket()
         {
