@@ -1,0 +1,27 @@
+﻿@model P140_Pronia.Entities.Category
+
+@{
+    ViewData["Title"] = "Detail";
+}
+
+
+<div style="display:block">
+    <h1>Detail</h1>
+    <div>
+        <h4>Category</h4>
+        <hr />
+        <div class="row">
+            <div>
+                @Html.DisplayNameFor(model => model.Name)
+            </div>
+            <div>
+                @Html.DisplayFor(model => model.Name)
+            </div>
+        </div>
+    </div>
+    <div>
+        <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
+        <a asp-action="Index">Back to List</a>
+    </div>
+
+</div>
