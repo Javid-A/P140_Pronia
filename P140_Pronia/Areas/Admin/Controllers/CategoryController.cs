@@ -63,5 +63,60 @@ namespace P140_Pronia.Areas.Admin.Controllers
             _context.SaveChanges();
             return RedirectToAction(nameof(Index));
         }
+
+        [HttpGet]
+        public IActionResult Update(int id)
+        {
+            if(id == 0) return BadRequest();
+            Category category = _context.Categories.FirstOrDefault(c => c.Id == id)!;
+            if (category is null) return NotFound(); 
+            return View(category);
+        }
+
+        [HttpPost]
+        public IActionResult Update(int id,Category category)
+        {
+            if (id == 0) return BadRequest();
+
+            if (!ModelState.IsValid)
+            {
+                //foreach (var item in ModelState.Values.SelectMany(v => v.Errors))
+                //{
+                //    ModelState.AddModelError(string.Empty, item.ErrorMessage);
+                //}
+                return View();
+            }
+
+            Category existedCategory = _context.Categories.FirstOrDefault(c=>c.Id == id)!;
+
+            if (existedCategory is null) return NotFound();
+
+            bool existed = _context.Categories.Any(c => c.Name == category.Name);
+            if (existed)
+            {
+                ModelState.AddModelError(string.Empty,"Dont repeat yourself");
+                return View();
+            }
+
+            _context.Entry(existedCategory).CurrentValues.SetValues(category);
+
+            _context.SaveChanges();
+
+
+            return RedirectToAction(nameof(Index));
+        }
+
+
+        [HttpPost]
+        public IActionResult Delete(int id)
+        {
+            if (id == 0) return Json(new { status = 405, Message = "Enter valid id" });
+            Category category = _context.Categories.FirstOrDefault(c=>c.Id == id)!;
+            if (category is null) return Json(new {status =404,Message="Category not found"});
+
+            _context.Categories.Remove(category);
+            _context.SaveChanges();
+            return Json(new { status = 200, Message = "Category was successfully deleted" });
+        }
     }
 }

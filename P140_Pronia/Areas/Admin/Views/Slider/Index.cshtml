@@ -1,0 +1,85 @@
+﻿@model IEnumerable<Slider>
+@{
+    ViewData["Title"] = "Index";
+}
+
+
+<div class="table pt-3">
+    <div>
+        <a asp-controller="slider" asp-action="Create" class="btn btn-success btn-rounded btn-fw">Create</a>
+    </div>
+    <table class="table table-dark">
+        <thead>
+            <tr>
+                <th>
+                    #
+                </th>
+                <th>
+                    Image 
+                </th>
+                <th>
+                    Background Image
+                </th>
+                <th>
+                    Title
+                </th>
+                <th>
+                    Offer
+                </th>
+                <th>
+                    Short description
+                </th>
+                <th>
+                    URL
+                </th>
+               
+                <th>
+                    Settings
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @{
+                int count = 0;
+            }
+            @foreach (Slider slider in Model)
+            {
+                <tr>
+                    <td>
+                        @(++count)
+                    </td>
+                    <td>
+                        <img src="~/assets/images/website-images/@slider.Image"/>
+                    </td>
+                    <td>
+                        <img src="~/assets/images/website-images/@slider.BgImage"  />
+                    </td>
+                    <td>
+                        @slider.Title
+                    </td>
+                    <td>
+                        @slider.Offer
+                    </td>
+                    <td>
+                        @if(slider.ShortDesc.Length > 20)
+                        {
+                            @(slider.ShortDesc.Substring(0,20)+"...")
+                        }
+                    </td>
+                    <td>
+                        @slider.URL
+                    </td>
+                    <td>
+                        <div>
+                            <a asp-controller="slider" asp-action="Detail" asp-route-id="@slider.Id" class="btn btn-info btn-rounded btn-fw">Details</a>
+                            <a asp-controller="slider" asp-action="Update" asp-route-id="@slider.Id" class="btn btn-warning btn-rounded btn-fw">Update</a>
+                            <a asp-controller="slider" id="deleteslider" asp-action="Delete" asp-route-id="@slider.Id" class="btn btn-danger btn-rounded btn-fw">Delete</a>
+                        </div>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+

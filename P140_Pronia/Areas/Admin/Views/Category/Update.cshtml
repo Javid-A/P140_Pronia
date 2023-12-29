@@ -1,0 +1,19 @@
+﻿@model Category
+@{
+    ViewData["Title"] = "Update";
+}
+
+<div>
+    <h1>
+        Category Update
+    </h1>
+    <div>
+        <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+        <form method="post">
+            <label asp-for="@Model.Name"></label>
+            <input asp-for="@Model.Name" class="form-control"/><br />
+            <span asp-validation-for="@Model.Name" class="text-danger"></span><br />
+            <button class="btn btn-outline-warning" type="submit">Update</button>
+        </form>
+    </div>
+</div>
