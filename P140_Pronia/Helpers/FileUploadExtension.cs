@@ -16,5 +16,21 @@ namespace P140_Pronia.Helpers
             }
             return fileName;
         }
+
+        public static bool IsValidLength(this IFormFile file,double memoryMb)
+        {
+            bool result = (double)file.Length / 1024 / 1024 <= memoryMb;
+            return result;
+        }
+
+        public static void DeleteImage(this string fileName, params string[] folders)
+        {
+            string folderPath = Path.Combine(folders);
+            string fullPath = Path.Combine(folderPath, fileName);
+            if (File.Exists(fullPath))
+            {
+                File.Delete(fullPath);
+            }
+        }
     }
 }

@@ -1,9 +1,11 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using P140_Pronia.Entities;
 
 namespace P140_Pronia.DAL
 {
-    public class ProniaDbContext : DbContext
+    public class ProniaDbContext : IdentityDbContext<IdentityUser>
     {
         public ProniaDbContext(DbContextOptions<ProniaDbContext> options) : base(options)
         {

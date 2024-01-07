@@ -1,0 +1,79 @@
+﻿@model SliderUpdateVM
+@{
+    ViewData["Title"] = "Update";
+}
+
+<div>
+    <h2>
+        Update Slider
+    </h2>
+    <form method="post" enctype="multipart/form-data">
+       
+        <div asp-validation-summary="All" class="alert alert-danger"></div>
+        <div class="images">
+            <div class="main-image">
+                <h3>Main image</h3>
+                <img width="200" src="~/assets/images/website-images/@Model.Image" />
+            </div>
+            <div class="bg-image">
+                <h3>Background image image</h3>
+                <img width="200" src="~/assets/images/website-images/@Model.BgImage" />
+            </div>
+        </div>
+        <div>
+            <label asp-for="@Model.MainPhoto"></label>
+            <input asp-for="@Model.MainPhoto" class="form-control" />
+            <div>
+                <span asp-validation-for="@Model.MainPhoto">
+                </span>
+            </div>
+        </div>
+        <div>
+            <label asp-for="@Model.BgPhoto"></label>
+            <input asp-for="@Model.BgPhoto" class="form-control" />
+            <div>
+                <span asp-validation-for="@Model.BgPhoto">
+                </span>
+            </div>
+        </div>
+        <div>
+            <label asp-for="@Model.Title"></label>
+            <input asp-for="@Model.Title" class="form-control" />
+            <div>
+                <span asp-validation-for="@Model.Title">
+                </span>
+            </div>
+        </div>
+        <div>
+            <label asp-for="@Model.Offer"></label>
+            <input asp-for="@Model.Offer" class="form-control" />
+            <div>
+                <span asp-validation-for="@Model.Offer">
+                </span>
+            </div>
+        </div>
+        <div>
+            <label asp-for="@Model.ShortDesc"></label>
+            <input asp-for="@Model.ShortDesc" class="form-control" />
+            <div>
+                <span asp-validation-for="@Model.ShortDesc">
+                </span>
+            </div>
+        </div>
+        <div>
+            <label asp-for="@Model.URL"></label>
+            <input asp-for="@Model.URL" class="form-control" />
+            <div>
+                <span asp-validation-for="@Model.URL">
+                </span>
+            </div>
+        </div>
+        <div class="mt-2">
+            <button type="submit" class="btn btn-outline-warning">
+                Update
+            </button>
+        </div>
+    </form>
+</div>
+
+
