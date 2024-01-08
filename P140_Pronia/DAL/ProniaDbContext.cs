@@ -5,7 +5,7 @@ using P140_Pronia.Entities;
 
 namespace P140_Pronia.DAL
 {
-    public class ProniaDbContext : IdentityDbContext<IdentityUser>
+    public class ProniaDbContext : IdentityDbContext<CustomUser>
     {
         public ProniaDbContext(DbContextOptions<ProniaDbContext> options) : base(options)
         {
@@ -20,9 +20,10 @@ namespace P140_Pronia.DAL
         public DbSet<Information> Informations { get; set; }
         public DbSet<PlantCategory> PlantCategories { get; set; }
         public DbSet<PlantInformation> PlantInformations { get; set; }
+        public DbSet<CustomUser> CustomUsers { get; set; }
 
 
-        
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             foreach (var item in modelBuilder.Model.

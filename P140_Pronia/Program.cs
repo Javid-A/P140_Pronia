@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using P140_Pronia.DAL;
+using P140_Pronia.Entities;
 using P140_Pronia.Services;
 using System.Text.Json.Serialization;
 
@@ -16,7 +17,7 @@ builder.Services.AddDbContext<ProniaDbContext>(opt =>
 });
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<LayoutService>();
-builder.Services.AddIdentity<IdentityUser, IdentityRole>(options =>
+builder.Services.AddIdentity<CustomUser, IdentityRole>(options =>
 {
     // Password settings.
     options.Password.RequireDigit = true;
@@ -42,6 +43,9 @@ var app = builder.Build();
 app.UseRouting();
 
 app.UseStaticFiles();
+
+app.UseAuthentication();
+app.UseAuthorization();
 
 app.UseEndpoints(endpoints =>
 {

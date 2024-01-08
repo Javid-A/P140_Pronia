@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using P140_Pronia.DAL;
 using P140_Pronia.Entities;
 using P140_Pronia.Helpers;
@@ -7,6 +8,7 @@ using P140_Pronia.ViewModels;
 namespace P140_Pronia.Areas.Admin.Controllers
 {
     [Area("Admin")]
+    [Authorize(Roles ="Admin,Moderator")]
     public class SliderController : Controller
     {
         private readonly ProniaDbContext _context;
@@ -68,10 +70,17 @@ namespace P140_Pronia.Areas.Admin.Controllers
             return View(slider);
         }
 
+        
+
         [HttpPost]
         public async Task<IActionResult> Update(int id,SliderUpdateVM updatedSlider)
         {
+            //bool Test(Slider slider)
+            //{
+            //    return slider.Id==id;
+            //}
             if (id == 0) return BadRequest();
+            //Slider slider = _context.Sliders.FirstOrDefault(Test)!;
             Slider slider = _context.Sliders.FirstOrDefault(s=>s.Id == id)!;
             if (slider is null) return NotFound();
 
