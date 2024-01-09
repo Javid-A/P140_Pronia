@@ -113,7 +113,7 @@ namespace P140_Pronia.Controllers
                                                 .Where(p => p.PlantCategories
                                                             .Any(pc => pc.CategoryId == category.CategoryId)
                                                              && p.Id != plant.Id
-                                                             && !relateds.Contains(p,new PlantComparer()))
+                                                             && !relateds.Contains(p, new PlantComparer()))
                                                 .ToList();
 
                 relateds.AddRange(founds);

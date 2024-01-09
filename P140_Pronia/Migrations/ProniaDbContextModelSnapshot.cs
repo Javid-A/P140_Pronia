@@ -169,7 +169,7 @@ namespace P140_Pronia.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Categories");
+                    b.ToTable("Categories", (string)null);
                 });
 
             modelBuilder.Entity("P140_Pronia.Entities.CustomUser", b =>
@@ -262,7 +262,7 @@ namespace P140_Pronia.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Informations");
+                    b.ToTable("Informations", (string)null);
                 });
 
             modelBuilder.Entity("P140_Pronia.Entities.Plant", b =>
@@ -290,7 +290,7 @@ namespace P140_Pronia.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Plants");
+                    b.ToTable("Plants", (string)null);
                 });
 
             modelBuilder.Entity("P140_Pronia.Entities.PlantCategory", b =>
@@ -313,7 +313,7 @@ namespace P140_Pronia.Migrations
 
                     b.HasIndex("PlantId");
 
-                    b.ToTable("PlantCategories");
+                    b.ToTable("PlantCategories", (string)null);
                 });
 
             modelBuilder.Entity("P140_Pronia.Entities.PlantImage", b =>
@@ -338,7 +338,7 @@ namespace P140_Pronia.Migrations
 
                     b.HasIndex("PlantId");
 
-                    b.ToTable("PlantImages");
+                    b.ToTable("PlantImages", (string)null);
                 });
 
             modelBuilder.Entity("P140_Pronia.Entities.PlantInformation", b =>
@@ -361,7 +361,7 @@ namespace P140_Pronia.Migrations
 
                     b.HasIndex("PlantId");
 
-                    b.ToTable("PlantInformations");
+                    b.ToTable("PlantInformations", (string)null);
                 });
 
             modelBuilder.Entity("P140_Pronia.Entities.Setting", b =>
@@ -382,7 +382,7 @@ namespace P140_Pronia.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Settings");
+                    b.ToTable("Settings", (string)null);
                 });
 
             modelBuilder.Entity("P140_Pronia.Entities.Slider", b =>
@@ -418,7 +418,7 @@ namespace P140_Pronia.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Sliders");
+                    b.ToTable("Sliders", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

@@ -30,6 +30,7 @@ namespace P140_Pronia.Areas.Admin.Controllers
         {
             return View();
         }
+
         [HttpPost]
         public async Task<IActionResult> Create(Slider slider)
         {

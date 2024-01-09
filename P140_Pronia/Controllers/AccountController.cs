@@ -29,7 +29,6 @@ namespace P140_Pronia.Controllers
         [HttpPost]
         public async Task<IActionResult> Login(LoginVM login)
         {
-
             if (!ModelState.IsValid) return View();
 
             CustomUser user = await _userManager.FindByNameAsync(login.Username);
@@ -39,6 +38,7 @@ namespace P140_Pronia.Controllers
                 ModelState.AddModelError(string.Empty,"Username or password is incorrect");
                 return View();
             }
+
             Microsoft.AspNetCore.Identity.SignInResult result =  await _signInManager.PasswordSignInAsync(user, login.Password, login.RememberMe, true);
 
             if (!result.Succeeded)

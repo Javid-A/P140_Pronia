@@ -1,0 +1,88 @@
+﻿@model IEnumerable<Plant>
+@{
+    ViewData["Title"] = "Index";
+    // List<string> incorrectFiles = TempData["IncorrectImages"] as List<string> ?? new List<string>();
+}
+
+
+<div class="table pt-3">
+    <p>@((TempData["IncorrectImages"] as List<string>) == null ? "it is null" : "it is not null" )</p>
+    <p>@TempData["test"]</p>
+  @*   <span class="text-danger">@(incorrectFiles.Count > 0 ? string.Concat(string.Join(", ", incorrectFiles),"files did not upload") : "")</span> *@
+    <div>
+        <a asp-controller="plants" asp-action="Create" class="btn btn-success btn-rounded btn-fw">Create</a>
+    </div>
+    <table class="table table-dark">
+        <thead>
+            <tr>
+                <th>
+                    #
+                </th>
+                <th>
+                    Main image
+                </th>
+                <th>
+                    Name
+                </th>
+                <th>
+                    Price
+                </th>
+                <th>
+                    Description
+                </th>
+                <th>
+                    SKU
+                </th>
+
+                <th>
+                    Settings
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @{
+                int count = 0;
+            }
+            @foreach (Plant plant in Model)
+            {
+                <tr>
+                    <td>
+                        @(++count)
+                    </td>
+                    <td>
+                        <img src="~/assets/images/website-images/@plant.PlantImages.FirstOrDefault(p=>p.IsMain == true)?.Path" />
+                    </td>
+                    <td>
+                        @plant.Name
+                    </td>
+                    <td>
+                        @plant.Price
+                    </td>
+                    <td>
+                        @if (plant.Description.Length > 20)
+                        {
+                            @(plant.Description.Substring(0, 20) + "...")
+                        }
+                        else
+                        {
+                            @(plant.Description)
+                        }
+                    </td>
+                    <td>
+                        @plant.SKU
+                    </td>
+                    <td>
+                        <div>
+                            <a asp-controller="Plants" asp-action="Detail" asp-route-id="@plant.Id" class="btn btn-info btn-rounded btn-fw">Details</a>
+                            <a asp-controller="Plants" asp-action="Update" asp-route-id="@plant.Id" class="btn btn-warning btn-rounded btn-fw">Update</a>
+                            <a asp-controller="Plants" id="deleteplants" asp-action="Delete" asp-route-id="@plant.Id" class="btn btn-danger btn-rounded btn-fw">Delete</a>
+                        </div>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+
+

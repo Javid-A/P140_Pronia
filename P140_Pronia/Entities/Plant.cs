@@ -11,5 +11,12 @@
         public ICollection<PlantCategory> PlantCategories { get; set; } = null!;
         public ICollection<PlantInformation> PlantInformations { get; set; } = null!;
 
+        public Plant()
+        {
+            PlantImages = new List<PlantImage>();
+            PlantCategories = new List<PlantCategory>();
+            PlantInformations = new List<PlantInformation>();
+        }
+
     }
 }
