@@ -21,6 +21,7 @@ namespace P140_Pronia.Controllers
         {
             if (id == 0) return BadRequest();
             IQueryable<Plant> queryable = _context.Plants.AsNoTracking().AsQueryable();
+
             Plant plant = queryable
                                     .Include(p => p.PlantInformations)
                                     .ThenInclude(p => p.Information)

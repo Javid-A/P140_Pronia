@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Diagnostics;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using P140_Pronia.DAL;
 using P140_Pronia.Entities;
 using P140_Pronia.Helpers;
@@ -44,7 +45,7 @@ namespace P140_Pronia.Areas.Admin.Controllers
                 Informations = await _context.Informations.ToListAsync(),
                 Categories = _context.Categories.ToList()
             };
-            //if (!ModelState.IsValid) return View(model);
+            if (!ModelState.IsValid) return View(model);
             Plant newPlant = new Plant();
 
             bool skuResult = _context.Plants.Any(p => p.SKU.ToLower() == plant.SKU.ToLower());
@@ -80,13 +81,11 @@ namespace P140_Pronia.Areas.Admin.Controllers
             #endregion
 
             #region Other photos
-            List<string> incorrectFiles = new List<string>();
             foreach (var photo in plant.Photos)
             {
                 if (!photo.IsValidLength(1))
                 {
-                    string fileName = photo.FileName;
-                    incorrectFiles.Add(fileName);
+                    TempData["Incorrects"] += photo.FileName + ' ';
                     continue;
                 }
                 PlantImage other = new PlantImage
@@ -96,7 +95,7 @@ namespace P140_Pronia.Areas.Admin.Controllers
                 };
                 newPlant.PlantImages.Add(other);
             }
-            TempData["IncorrectImages"] = incorrectFiles;
+            
             #endregion
 
             #region Categories and Informations
@@ -130,6 +129,26 @@ namespace P140_Pronia.Areas.Admin.Controllers
             await _context.SaveChangesAsync();
 
             return RedirectToAction(nameof(Index));
+        }
+
+        public IActionResult Update(int id)
+        {
+            if (id == 0) return BadRequest();
+
+            PlantUpdateVM model = _context.Plants.Include(p=>p.PlantImages)
+                                                    .Include(p=>p.PlantInformations)
+                                                    .Include(p=>p.PlantCategories)
+                                                    .Select(p=>new PlantUpdateVM
+            {
+                Id= p.Id,
+                Name = p.Name,
+                Price = p.Price,
+                Description = p.Description,
+                PlantImages = p.PlantImages.ToList(),
+                Categories = _context.Categories.ToList(),
+                Informations = _context.Informations.ToList()
+            }).FirstOrDefault(p => p.Id == id)!;
+            return View(model);
         }
     }
 }

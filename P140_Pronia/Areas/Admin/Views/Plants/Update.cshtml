@@ -1,0 +1,106 @@
+﻿@model PlantUpdateVM
+@{
+    ViewData["Title"] = "Update";
+}
+
+<div>
+    <h2>
+        Create Slider
+    </h2>
+    <form method="post" enctype="multipart/form-data">
+        <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+        <div>
+            <label asp-for="MainPhoto"></label>
+            <input asp-for="MainPhoto" class="form-control" />
+            <div>
+                <span asp-validation-for="MainPhoto">
+                </span>
+            </div>
+        </div>
+        <div>
+            <label asp-for="HoverPhoto"></label>
+            <input asp-for="HoverPhoto" class="form-control" />
+            <div>
+                <span asp-validation-for="HoverPhoto">
+                </span>
+            </div>
+        </div>
+        <div>
+            <label asp-for="Photos"></label>
+            <input asp-for="Photos" class="form-control" />
+            <div>
+                <span asp-validation-for="Photos">
+                </span>
+            </div>
+        </div>
+        <div class="images d-flex">
+            @foreach (var item in Model.PlantImages)
+            {
+                <div class="image" style="position:relative;width:200px">
+                    @if (item.IsMain != true && item.IsMain != false)
+                    {
+                        <button type="button" class="delete-image btn btn-outline-danger" style="position:absolute;top:10px;right:10px">X</button>
+                    }
+                    <img src="~/assets/images/website-images/@item.Path" style="width:100%" />
+                </div>
+            }
+
+        </div>
+        <div>
+            <label asp-for="Name"></label>
+            <input asp-for="Name" class="form-control" />
+            <div>
+                <span asp-validation-for="Name">
+                </span>
+            </div>
+        </div>
+        <div>
+            <label asp-for="Price"></label>
+            <input asp-for="Price" class="form-control" />
+            <div>
+                <span asp-validation-for="Price">
+                </span>
+            </div>
+        </div>
+        <div>
+            <label asp-for="Description"></label>
+            <textarea asp-for="Description" rows="5" cols="60" class="form-control"></textarea>
+            <div>
+                <span asp-validation-for="Description">
+                </span>
+            </div>
+        </div>
+        <div>
+            <label asp-for="CategoryIds"></label>
+            <select asp-for="CategoryIds" class="form-select" )">
+            </select>
+            <div>
+                <span asp-validation-for="Categories">
+                </span>
+            </div>
+        </div>
+        <div>
+            <label asp-for="InformationIds"></label>
+            <select asp-for="InformationIds" class="form-select" )">
+            </select>
+            <div>
+                <span asp-validation-for="InformationIds">
+                </span>
+            </div>
+        </div>
+        <div class="mt-2">
+            <button type="submit" class="btn btn-outline-success">
+                Create
+            </button>
+        </div>
+    </form>
+</div>
+
+
+@section Scripts {
+    <script>
+        $(document).on("click", ".delete-image", function () {
+            $(this).parent().remove()
+        })
+    </script>
+}

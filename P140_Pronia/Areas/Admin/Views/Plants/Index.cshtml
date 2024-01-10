@@ -1,14 +1,34 @@
-﻿@model IEnumerable<Plant>
+﻿@* @using Newtonsoft.Json *@
+@model IEnumerable<Plant>
 @{
     ViewData["Title"] = "Index";
-    // List<string> incorrectFiles = TempData["IncorrectImages"] as List<string> ?? new List<string>();
+    //Complex case
+    // string incorrectsStr = TempData["Incorrects"] as string ?? "";
+
+    // List<IFormFile> incorrects = JsonConvert.DeserializeObject<List<IFormFile>>(incorrectsStr);null coalescing
 }
 
 
 <div class="table pt-3">
-    <p>@((TempData["IncorrectImages"] as List<string>) == null ? "it is null" : "it is not null" )</p>
-    <p>@TempData["test"]</p>
-  @*   <span class="text-danger">@(incorrectFiles.Count > 0 ? string.Concat(string.Join(", ", incorrectFiles),"files did not upload") : "")</span> *@
+    @*  Complex case *@
+    @*    @if (incorrects is not null)
+         {
+             @if (incorrects.Count > 0)
+             {
+                 <h4 class="text-danger">
+                     Failed images
+                 </h4>
+                 @foreach (var item in incorrects)
+                 {
+                     <p>@item.FileName</p>
+                 }
+             }
+         } *@
+
+    @if (TempData["Incorrects"] is not null)
+    {
+        <span class="text-danger">@TempData["Incorrects"]</span>
+    }
     <div>
         <a asp-controller="plants" asp-action="Create" class="btn btn-success btn-rounded btn-fw">Create</a>
     </div>
