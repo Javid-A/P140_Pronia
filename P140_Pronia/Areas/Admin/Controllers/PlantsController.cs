@@ -6,6 +6,8 @@ using P140_Pronia.DAL;
 using P140_Pronia.Entities;
 using P140_Pronia.Helpers;
 using P140_Pronia.ViewModels;
+using System.Collections;
+using System.Linq;
 
 namespace P140_Pronia.Areas.Admin.Controllers
 {
@@ -21,9 +23,13 @@ namespace P140_Pronia.Areas.Admin.Controllers
             _env = env;
         }
 
-        public IActionResult Index()
+        public IActionResult Index(int page = 1)
         {
-            IEnumerable<Plant> model = _context.Plants.Include(p => p.PlantImages).AsEnumerable();
+            double plantCount = _context.Plants.Include(p => p.PlantImages).AsEnumerable().Count();
+            ViewBag.PageCount = Math.Ceiling(plantCount / 2);
+            ViewBag.CurrentPage = page;
+
+            IEnumerable<Plant> model = _context.Plants.Include(p => p.PlantImages).Skip((page-1)*2).Take(2).AsEnumerable();
             return View(model);
         }
 
@@ -74,7 +80,7 @@ namespace P140_Pronia.Areas.Admin.Controllers
             PlantImage hoverImage = new PlantImage
             {
                 Path = hoverPhotoName,
-                IsMain = false
+                IsMain = null
             };
             newPlant.PlantImages.Add(hoverImage);
 
@@ -91,11 +97,11 @@ namespace P140_Pronia.Areas.Admin.Controllers
                 PlantImage other = new PlantImage
                 {
                     Path = await photo.GeneratePhoto(_env.WebRootPath, "assets", "images", "website-images"),
-                    Plant = newPlant
+                    Plant = newPlant,
                 };
                 newPlant.PlantImages.Add(other);
             }
-            
+
             #endregion
 
             #region Categories and Informations
@@ -120,9 +126,11 @@ namespace P140_Pronia.Areas.Admin.Controllers
             }
             #endregion
 
-            newPlant.SKU = plant.SKU; 
-            newPlant.Name = plant.Name; 
-            newPlant.Price = plant.Price; 
+
+
+            newPlant.SKU = plant.SKU;
+            newPlant.Name = plant.Name;
+            newPlant.Price = plant.Price;
             newPlant.Description = plant.Description;
 
             await _context.Plants.AddAsync(newPlant);
@@ -135,20 +143,121 @@ namespace P140_Pronia.Areas.Admin.Controllers
         {
             if (id == 0) return BadRequest();
 
-            PlantUpdateVM model = _context.Plants.Include(p=>p.PlantImages)
-                                                    .Include(p=>p.PlantInformations)
-                                                    .Include(p=>p.PlantCategories)
-                                                    .Select(p=>new PlantUpdateVM
-            {
-                Id= p.Id,
-                Name = p.Name,
-                Price = p.Price,
-                Description = p.Description,
-                PlantImages = p.PlantImages.ToList(),
-                Categories = _context.Categories.ToList(),
-                Informations = _context.Informations.ToList()
-            }).FirstOrDefault(p => p.Id == id)!;
+            PlantUpdateVM model = UpdatedPlant(id);
             return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Update(int id, PlantUpdateVM plant)
+        {
+            if (id == 0) return BadRequest();
+            PlantUpdateVM model = UpdatedPlant(id);
+            if (!ModelState.IsValid) return View(model);
+
+            Plant existedPlant = _context.Plants.Include(p => p.PlantCategories)
+                                                .Include(p => p.PlantImages)
+                                                .FirstOrDefault(p => p.Id == id)!;
+
+            #region Category and Information
+            var removableCategories = existedPlant.PlantCategories.Where(p => !plant.CategoryIds.Contains(p.CategoryId)).ToList();
+
+            foreach (var item in removableCategories)
+            {
+                existedPlant.PlantCategories.Remove(item);
+            }
+
+            foreach (var categoryId in plant.CategoryIds)
+            {
+                if (existedPlant.PlantCategories.Any(p => p.CategoryId != categoryId))
+                {
+                    PlantCategory category = new PlantCategory
+                    {
+                        CategoryId = categoryId
+                    };
+                    existedPlant.PlantCategories.Add(category);
+                }
+            }
+
+            var removableInformations = existedPlant.PlantInformations.Where(p => !plant.InformationIds.Contains(p.InformationId)).ToList();
+
+            foreach (var item in removableInformations)
+            {
+                existedPlant.PlantInformations.Remove(item);
+            }
+
+            foreach (var informationId in plant.InformationIds)
+            {
+                if (existedPlant.PlantInformations.Any(p => p.InformationId != informationId))
+                {
+                    PlantInformation information = new PlantInformation
+                    {
+                        InformationId = informationId
+                    };
+                    existedPlant.PlantInformations.Add(information);
+                }
+            }
+            #endregion
+
+
+            var removableImages = existedPlant.PlantImages.Where(p => !plant.PlantImagesIds.Contains(p.Id)).ToList();
+            foreach (var removable in removableImages)
+            {
+                existedPlant.PlantImages.Remove(removable);
+                FileUploadExtension.DeleteImage(removable.Path, _env.WebRootPath, "assets", "images", "website-images");
+            }
+
+            if(plant.Photos is not null)
+            {
+                foreach (var photo in plant.Photos)
+                {
+                    string fileName = await photo.GeneratePhoto(_env.WebRootPath, "assets", "images", "website-images");
+                    PlantImage image = new PlantImage
+                    {
+                        Path = fileName,
+                        IsMain = false
+                    };
+                    existedPlant.PlantImages.Add(image);
+                }
+            }
+
+
+            if(plant.MainPhoto is not null)
+            {
+                PlantImage existedImage = existedPlant.PlantImages.FirstOrDefault(p=>p.IsMain==true)!;
+                string oldName = existedImage.Path;
+                string fileName = await plant.MainPhoto.GeneratePhoto(_env.WebRootPath, "assets", "images", "website-images");
+                existedImage.Path = fileName;
+
+                FileUploadExtension.DeleteImage(oldName, _env.WebRootPath, "assets", "images", "website-images");
+            }
+            existedPlant.Name = plant.Name;
+            existedPlant.Price = plant.Price;
+            existedPlant.Description = plant.Description;
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction(nameof(Index));
+        }
+
+
+        PlantUpdateVM UpdatedPlant(int id)
+        {
+            PlantUpdateVM model = _context.Plants.Include(p => p.PlantImages)
+                                                    .Include(p => p.PlantInformations)
+                                                    .Include(p => p.PlantCategories)
+                                                    .Select(p => new PlantUpdateVM
+                                                    {
+                                                        Id = p.Id,
+                                                        Name = p.Name,
+                                                        Price = p.Price,
+                                                        Description = p.Description,
+                                                        PlantImages = p.PlantImages.ToList(),
+                                                        Categories = _context.Categories.ToList(),
+                                                        Informations = _context.Informations.ToList(),
+                                                        PlantCategories = p.PlantCategories.ToList(),
+                                                        PlantInformations = p.PlantInformations.ToList(),
+                                                        PlantImagesIds = p.PlantImages.Select(p => p.Id).ToList()
+                                                    }).FirstOrDefault(p => p.Id == id)!;
+            return model;
         }
     }
 }

@@ -29,12 +29,18 @@ namespace P140_Pronia.ViewModels
         [ValidateNever]
         public ICollection<Information> Informations { get; set; } = null!;
         [Required]
-        public ICollection<int> InformationIds { get; set; } = null!;
+        [Display(Name="Informations")]
+        public List<int> InformationIds { get; set; } = null!;
         [Required]
-        public ICollection<int> CategoryIds { get; set; } = null!;
+        [Display(Name="Categories")]
+        public List<int> CategoryIds { get; set; } = null!;
         [Required]
-        public ICollection<int> PlantImagesIds { get; set; } = null!;
+        public List<int> PlantImagesIds { get; set; } = null!;
         [ValidateNever]
         public ICollection<PlantImage> PlantImages { get; set; } = null!;
+        [ValidateNever]
+        public List<PlantCategory> PlantCategories { get; set; } = null!;
+        [ValidateNever]
+        public List<PlantInformation> PlantInformations { get; set; } = null!;
     }
 }
