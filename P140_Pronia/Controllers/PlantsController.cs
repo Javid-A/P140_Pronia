@@ -49,7 +49,7 @@ namespace P140_Pronia.Controllers
         public IActionResult AddBasket(int id)
         {
             if (id == 0) return NotFound();
-            Plant plant = _context.Plants.FirstOrDefault(p => p.Id == id)!;
+            Plant plant = _context.Plants.Include(p => p.PlantImages).FirstOrDefault(p => p.Id == id)!;
             if (plant is null) return NotFound();
 
             //Get cookie
@@ -57,8 +57,10 @@ namespace P140_Pronia.Controllers
             CookieItem cookiePlant = new CookieItem
             {
                 Id = plant.Id,
+                ImagePath = plant.PlantImages.FirstOrDefault(p => p.IsMain == true)?.Path,
                 Name = plant.Name,
                 Price = plant.Price,
+                UnitPrice =plant.Price,
                 Quantity = 1
             };
             BasketItem basketItem = new BasketItem();
@@ -94,6 +96,44 @@ namespace P140_Pronia.Controllers
             return RedirectToAction("Index", "Home");
         }
 
+        [HttpPost]
+        public IActionResult RemoveItemFromBasket(int id)
+        {
+            string basketStr = HttpContext.Request.Cookies["basket"];
+            if (basketStr is null)
+            {
+                return Json(new
+                {
+                    Status = 404,
+                    Message = "There is no basket"
+                });
+            }
+
+            BasketItem basket = JsonConvert.DeserializeObject<BasketItem>(basketStr);
+
+            CookieItem item = basket.CookieItems.FirstOrDefault(ci => ci.Id == id);
+            if (item is null)
+            {
+                return Json(new
+                {
+                    Status = 404,
+                    Message = "There is no item with this id"
+                });
+            }
+
+            basket.CookieItems.Remove(item);
+
+            string newBasketStr = JsonConvert.SerializeObject(basket);
+            HttpContext.Response.Cookies.Append("basket", newBasketStr);
+
+            return Json(
+                new
+                {
+                    Status = 200,
+                    Message = $"{item.Name} hase been successfully removed"
+                }
+                );
+        }
         public IActionResult ShowBasket()
         {
             var basket = HttpContext.Request.Cookies["basket"] ?? "";

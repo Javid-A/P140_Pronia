@@ -131,7 +131,8 @@
                                                 <li>
                                                     <a class="dropdown-item" href="my-account.html">My account</a>
                                                 </li>
-                                                @if(User.Identity.IsAuthenticated){
+                                                @if (User.Identity.IsAuthenticated)
+                                                {
                                                     <li>
                                                         <a class="dropdown-item" asp-controller="Account" asp-action="Profile">@User.Identity.Name</a>
                                                         <a class="dropdown-item" asp-controller="Account" asp-action="Logout">Logout</a>
@@ -826,77 +827,37 @@
                             </a>
                         </div>
                         <ul class="minicart-list">
-                            <li class="minicart-product">
-                                <a class="product-item_remove" href="#">
-                                    <i class="pe-7s-close"
-                                       data-tippy="Remove"
-                                       data-tippy-inertia="true"
-                                       data-tippy-animation="shift-away"
-                                       data-tippy-delay="50"
-                                       data-tippy-arrow="true"
-                                       data-tippy-theme="sharpborder"></i>
-                                </a>
-                                <a href="single-product-variable.html"
-                                   class="product-item_img">
-                                    <img class="img-full"
-                                         src="~/assets/images/product/small-size/2-1-70x78.png"
-                                         alt="Product Image" />
-                                </a>
-                                <div class="product-item_content">
-                                    <a class="product-item_title"
-                                       href="single-product-variable.html">American Marigold</a>
-                                    <span class="product-item_quantity">1 x $23.45</span>
-                                </div>
-                            </li>
-                            <li class="minicart-product">
-                                <a class="product-item_remove" href="#">
-                                    <i class="pe-7s-close"
-                                       data-tippy="Remove"
-                                       data-tippy-inertia="true"
-                                       data-tippy-animation="shift-away"
-                                       data-tippy-delay="50"
-                                       data-tippy-arrow="true"
-                                       data-tippy-theme="sharpborder"></i>
-                                </a>
-                                <a href="single-product-variable.html"
-                                   class="product-item_img">
-                                    <img class="img-full"
-                                         src="~/assets/images/product/small-size/2-2-70x78.png"
-                                         alt="Product Image" />
-                                </a>
-                                <div class="product-item_content">
-                                    <a class="product-item_title"
-                                       href="single-product-variable.html">Black Eyed Susan</a>
-                                    <span class="product-item_quantity">1 x $25.45</span>
-                                </div>
-                            </li>
-                            <li class="minicart-product">
-                                <a class="product-item_remove" href="#">
-                                    <i class="pe-7s-close"
-                                       data-tippy="Remove"
-                                       data-tippy-inertia="true"
-                                       data-tippy-animation="shift-away"
-                                       data-tippy-delay="50"
-                                       data-tippy-arrow="true"
-                                       data-tippy-theme="sharpborder"></i>
-                                </a>
-                                <a href="single-product-variable.html"
-                                   class="product-item_img">
-                                    <img class="img-full"
-                                         src="~/assets/images/product/small-size/2-3-70x78.png"
-                                         alt="Product Image" />
-                                </a>
-                                <div class="product-item_content">
-                                    <a class="product-item_title"
-                                       href="single-product-variable.html">Bleeding Heart</a>
-                                    <span class="product-item_quantity">1 x $30.45</span>
-                                </div>
-                            </li>
+                            @foreach (CookieItem item in layoutService.GetBasket()?.CookieItems)
+                            {
+                                <li class="minicart-product">
+                                    <a class="product-item_remove" href="#">
+                                        <i class="pe-7s-close"
+                                           data-id="@item.Id"
+                                           data-tippy="Remove"
+                                           data-tippy-inertia="true"
+                                           data-tippy-animation="shift-away"
+                                           data-tippy-delay="50"
+                                           data-tippy-arrow="true"
+                                           data-tippy-theme="sharpborder"></i>
+                                    </a>
+                                    <a href="single-product-variable.html"
+                                       class="product-item_img">
+                                        <img class="img-full"
+                                             src="~/assets/images/website-images/@item.ImagePath"
+                                             alt="Product Image" />
+                                    </a>
+                                    <div class="product-item_content">
+                                        <a class="product-item_title"
+                                           href="single-product-variable.html">@item.Name</a>
+                                        <span class="product-item_quantity">@item.Quantity x $@item.UnitPrice</span>
+                                    </div>
+                                </li>
+                            }
                         </ul>
                     </div>
                     <div class="minicart-item_total">
                         <span>Subtotal</span>
-                        <span class="ammount">$79.35</span>
+                        <span class="ammount">$@layoutService.GetBasket()?.TotalPrice</span>
                     </div>
                     <div class="group-btn_wrap d-grid gap-2">
                         <a href="cart.html" class="btn btn-dark">View Cart</a>
@@ -909,7 +870,7 @@
         <!-- Main Header Area End Here -->
         @RenderBody()
         <!-- Begin Footer Area -->
-       @await Component.InvokeAsync("Footer");
+        @await Component.InvokeAsync("Footer");
         <!-- Footer Area End Here -->
         <!-- Begin Modal Area -->
         <div class="modal quick-view-modal fade"
@@ -1109,9 +1070,44 @@
     <script src="~/assets/js/plugins/ion.rangeSlider.min.js"></script>
     <script src="~/assets/js/plugins/mailchimp-ajax.js"></script>
     <script src="~/assets/js/plugins/jquery.counterup.js"></script>
-
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <!--Main JS (Common Activation Codes)-->
     <script src="~/assets/js/main.js"></script>
-    @RenderSection("Scripts",false)
+    <script>
+        $(document).on("click", ".product-item_remove i", function () {
+            let parent = $(this).parent().parent();
+            Swal.fire({
+                title: "Do you want to save the changes?",
+                showDenyButton: true,
+                confirmButtonText: "Save",
+                denyButtonText: `Don't save`
+            }).then((result) => {
+                /* Read more about isConfirmed, isDenied below */
+                let origin = location.origin;
+                let id = $(this).attr("data-id")
+                let endpoint = "@Url.Action("RemoveItemFromBasket", "Plants")"
+                let url = `${origin}${endpoint}/${id}`
+               
+                if (result.isConfirmed) {
+                    fetch(url, { method: "POST" }).then(resp => resp.json()).then(data => {
+                        if (data.status == 200) {
+                            Swal.fire(`${data.message}`, "", "success");
+                            setTimeout(() => {
+                                console.log(parent)
+                                parent.remove()
+                            },200)
+                        } else {
+                            Swal.fire(`${data.message}`, "", "error");
+                        }
+                    })
+
+                } else if (result.isDenied) {
+                    Swal.fire("Changes are not saved", "", "info");
+                }
+            });
+           
+        })
+    </script>
+    @RenderSection("Scripts", false)
 </body>
 </html>

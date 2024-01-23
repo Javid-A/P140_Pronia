@@ -17,7 +17,9 @@ namespace P140_Pronia.Services
             string basketStr = _http.HttpContext.Request.Cookies["basket"] ?? "";
 
             BasketItem basket = JsonConvert.DeserializeObject<BasketItem>(basketStr)!;
-            return basket;
+            basket.Count =  basket.CookieItems.Sum(ci => ci.Quantity);
+            basket.TotalPrice = basket.CookieItems.Sum(ci => ci.Price);
+            return basket ?? new BasketItem();
         }
     }
 }
